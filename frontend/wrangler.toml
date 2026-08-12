@@ -1,0 +1,28 @@
+name = "togethercareai-frontend"
+main = "worker/index.ts"
+compatibility_date = "2025-01-01"
+
+# --- Container definition ---
+# Builds ./Dockerfile and runs it behind the Worker above. Requires a
+# Workers Paid plan. See: https://developers.cloudflare.com/containers/
+[[containers]]
+class_name = "FrontendContainer"
+image = "./Dockerfile"
+max_instances = 3
+
+[[durable_objects.bindings]]
+name = "FRONTEND_CONTAINER"
+class_name = "FrontendContainer"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["FrontendContainer"]
+
+# --- Non-secret config passed into the container as env vars ---
+# Once the backend's Cloudflare Tunnel hostname is known, set it here (or
+# override per-environment below). For anything sensitive (e.g. API_KEY),
+# use `wrangler secret put API_KEY` instead of committing it here.
+[vars]
+BACKEND_URL = "http://localhost:8000"
+AB_ENABLED = "0"
+AB_EVERY_N = "5"

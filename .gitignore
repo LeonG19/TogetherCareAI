@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Backend runtime data (may contain real user conversations/feedback - never commit)
+backend/logs/
+backend/comments/
+
+# Env files / secrets
+.env
+.env.*
+!.env.example
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.wrangler/
+frontend/*.tsbuildinfo
+
+# Cloudflare
+.wrangler/
+wrangler.toml.bak
+
+# OS / editor
+.DS_Store
+*.swp

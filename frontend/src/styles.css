@@ -1,0 +1,209 @@
+:root {
+  --bg: #f9f9f5;
+  --text: #000000;
+  --user-avatar: #8faf6a;
+  --assistant-avatar: #4e6f4e;
+  --primary: #4e6f4e;
+  --bubble-bg: #ffffff;
+  --border: #e2e2da;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 1rem 1.5rem;
+  background-color: var(--bg);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat-message {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.chat-message.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.chat-message.user .avatar {
+  background-color: var(--user-avatar);
+}
+
+.chat-message.assistant .avatar {
+  background-color: var(--assistant-avatar);
+}
+
+.bubble {
+  background-color: var(--bubble-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
+  max-width: 75%;
+}
+
+.content p {
+  margin: 0.3rem 0;
+}
+
+.ab-bubble {
+  max-width: 90%;
+}
+
+.ab-label {
+  font-weight: 600;
+  margin: 0.4rem 0 0.2rem;
+}
+
+.ab-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.chat-error {
+  color: #a33;
+  padding: 0.4rem 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--primary);
+  background-color: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feedback {
+  margin-top: 0.5rem;
+}
+
+.feedback-toggle {
+  background: none;
+  color: var(--primary);
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.feedback-form textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 0.4rem;
+  font-family: inherit;
+}
+
+.stars {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.3rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.star-filled {
+  color: #e8b800;
+}
+
+.feedback-status.ok {
+  color: var(--primary);
+}
+
+.feedback-status.err {
+  color: #a33;
+}

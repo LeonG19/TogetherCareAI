@@ -1,0 +1,23 @@
+# Named-tunnel config for exposing backend.py through Cloudflare Tunnel.
+# This is the *stable* setup (a fixed hostname), for once you have a domain
+# in Cloudflare. Until then, use the quick-tunnel command in README.md instead
+# - it needs no config file, but hands you a random *.trycloudflare.com URL
+# that changes every time you restart it.
+#
+# Setup (run once on the backend server):
+#   cloudflared tunnel login
+#   cloudflared tunnel create togethercare-backend
+#   cloudflared tunnel route dns togethercare-backend backend.yourdomain.com
+#   cp cloudflared/config.example.yml ~/.cloudflared/config.yml
+#   # then edit the two placeholders below
+#
+# Run:
+#   cloudflared tunnel run togethercare-backend
+
+tunnel: <TUNNEL_ID>              # from `cloudflared tunnel create` output
+credentials-file: /root/.cloudflared/<TUNNEL_ID>.json
+
+ingress:
+  - hostname: backend.yourdomain.com
+    service: http://localhost:8000
+  - service: http_status:404
