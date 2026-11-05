@@ -1,0 +1,26 @@
+[Unit]
+Description=TogetherCare FastAPI backend (mode from RAG_ENABLED in backend/.env)
+After=network.target togethercare-vllm.service
+# Wants, not Requires: the backend must come up and stay up even when vLLM is
+# still loading weights or has crashed. _hf_post() retries connection-refused
+# for ~2 minutes, and /togethercareAI stays answerable throughout, so a backend
+# that starts first is correct behaviour rather than a failure.
+Wants=togethercare-vllm.service
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/lagarza3/togethercare/backend
+EnvironmentFile=-/mnt/lagarza3/togethercare/backend/.env
+# Port 8000 is taken by another user's uvicorn on this box, and 8002 as well.
+Environment=PORT=8010
+Environment=HF_HOME=/mnt/lagarza3/hf_cache
+ExecStart=/mnt/lagarza3/.venv-backend-rag/bin/python -m uvicorn backend:app --host 127.0.0.1 --port 8010
+
+Restart=always
+RestartSec=5
+
+StandardOutput=append:/mnt/lagarza3/logs/backend.log
+StandardError=append:/mnt/lagarza3/logs/backend.log
+
+[Install]
+WantedBy=default.target

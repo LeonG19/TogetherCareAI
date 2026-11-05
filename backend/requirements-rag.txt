@@ -1,0 +1,25 @@
+# Retrieval extras. Only needed when RAG_ENABLED=1, which is what makes
+# backend.py import torch / sentence-transformers / numpy / faiss / pinecone
+# at all.
+#
+# Install on top of requirements.txt. Prefer CPU-only torch: the embedder is
+# pinned to device="cpu" (the GPU on this host is shared and vLLM has claimed
+# nearly all free VRAM), and the CUDA build costs ~4 GB for nothing.
+#
+#   pip install --index-url https://download.pytorch.org/whl/cpu torch==2.9.1
+#   pip install -r requirements.txt -r requirements-rag.txt
+#
+# numpy: the original pin was 1.26.4, but sentence-transformers 5.2.0 and
+# faiss-cpu 1.15.0 both require numpy>=2, so that pin is not satisfiable with
+# this set. Recorded here as what actually resolves.
+numpy==2.2.6
+sentence-transformers==5.2.0
+torch==2.9.1
+huggingface-hub==0.35.3
+
+# Local vector store (RAG_BACKEND=faiss). No API key, no network, exact search.
+faiss-cpu==1.15.0
+
+# Hosted alternative (RAG_BACKEND=pinecone). v10 returns a QueryResponse
+# object rather than a dict - see _extract_matches() in backend.py.
+pinecone==10.0.0

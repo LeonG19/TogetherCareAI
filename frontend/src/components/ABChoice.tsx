@@ -1,4 +1,4 @@
-import { renderMarkdown } from "../markdown";
+import { AnswerContent } from "./AnswerContent";
 
 export interface PendingAb {
   interactionId: string;
@@ -20,10 +20,10 @@ export function ABChoice({
       </div>
       <div className="bubble ab-bubble">
         <p className="ab-label">Answer A (concise &amp; direct):</p>
-        <div className="content" dangerouslySetInnerHTML={renderMarkdown(ab.answerA)} />
+        <AnswerContent text={ab.answerA} />
         <hr />
         <p className="ab-label">Answer B (warm &amp; empathic):</p>
-        <div className="content" dangerouslySetInnerHTML={renderMarkdown(ab.answerB)} />
+        <AnswerContent text={ab.answerB} />
         <div className="ab-actions">
           <button type="button" onClick={() => onChoose("A")}>
             Prefer A

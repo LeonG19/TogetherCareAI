@@ -1,4 +1,4 @@
-import { renderMarkdown } from "../markdown";
+import { AnswerContent } from "./AnswerContent";
 import { FeedbackForm } from "./FeedbackForm";
 
 export interface ChatMessageData {
@@ -14,7 +14,7 @@ export function ChatMessage({ message }: { message: ChatMessageData }) {
         {message.role === "user" ? "U" : "A"}
       </div>
       <div className="bubble">
-        <div className="content" dangerouslySetInnerHTML={renderMarkdown(message.content)} />
+        <AnswerContent text={message.content} />
         {message.role === "assistant" && message.interactionId && (
           <FeedbackForm interactionId={message.interactionId} />
         )}
