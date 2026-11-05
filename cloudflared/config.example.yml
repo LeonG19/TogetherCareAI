@@ -1,23 +1,34 @@
-# Named-tunnel config for exposing backend.py through Cloudflare Tunnel.
+# Named-tunnel config for exposing the WEB TIER through Cloudflare Tunnel.
 # This is the *stable* setup (a fixed hostname), for once you have a domain
 # in Cloudflare. Until then, use the quick-tunnel command in README.md instead
 # - it needs no config file, but hands you a random *.trycloudflare.com URL
 # that changes every time you restart it.
 #
-# Setup (run once on the backend server):
+# scripts/setup_named_tunnel.sh does all of the below for you, including
+# swapping the systemd unit over and backing up the old one. Prefer it:
+#   ./scripts/setup_named_tunnel.sh togethercareai.yourdomain.com
+#
+# By hand, if you'd rather (run once on this server):
 #   cloudflared tunnel login
-#   cloudflared tunnel create togethercare-backend
-#   cloudflared tunnel route dns togethercare-backend backend.yourdomain.com
+#   cloudflared tunnel create togethercare
+#   cloudflared tunnel route dns togethercare togethercareai.yourdomain.com
 #   cp cloudflared/config.example.yml ~/.cloudflared/config.yml
 #   # then edit the two placeholders below
 #
 # Run:
-#   cloudflared tunnel run togethercare-backend
+#   cloudflared tunnel run togethercare
 
 tunnel: <TUNNEL_ID>              # from `cloudflared tunnel create` output
-credentials-file: /root/.cloudflared/<TUNNEL_ID>.json
+credentials-file: /home/lgarza3/.cloudflared/<TUNNEL_ID>.json  # this account, not root
 
 ingress:
-  - hostname: backend.yourdomain.com
-    service: http://localhost:8000
+  # 8080 is the WEB TIER (app + /api proxy + access gate) - the only thing that
+  # should ever be published.
+  #
+  # Do NOT put 8000 here. On this shared host 8000 is ANOTHER USER'S uvicorn,
+  # and tunnelling it would publish their service to the internet. The backend
+  # is on 8010 and must stay unpublished too: reaching it directly bypasses the
+  # access gate entirely.
+  - hostname: togethercareai.yourdomain.com
+    service: http://localhost:8080
   - service: http_status:404

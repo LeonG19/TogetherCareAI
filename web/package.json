@@ -1,0 +1,8 @@
+{
+  "name": "togethercare-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Single-origin web tier: serves frontend/dist and proxies /api to the FastAPI backend behind a shared access code. Node stdlib only - no dependencies, so there is no npm install step for this directory.",
+  "type": "module",
+  "main": "server.js"
+}

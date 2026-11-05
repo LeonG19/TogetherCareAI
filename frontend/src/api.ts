@@ -6,6 +6,8 @@ export interface ChatTurn {
   content: string;
 }
 
+export type ResponseMode = "short" | "detailed";
+
 export interface GenerateRequest {
   message: string;
   history: ChatTurn[];
@@ -13,6 +15,7 @@ export interface GenerateRequest {
   temperature: number;
   top_p: number;
   top_k_sources: number;
+  mode: ResponseMode;
 }
 
 export interface GenerateAbResponse {
@@ -33,8 +36,9 @@ function requestHeaders(): HeadersInit {
   return headers;
 }
 
+/** GET /togethercareAI - the backend's config echo (renamed from /health). */
 export async function backendHealth(): Promise<unknown> {
-  const res = await fetch(`${getBackendUrl()}/health`);
+  const res = await fetch(`${getBackendUrl()}/togethercareAI`);
   if (!res.ok) throw new Error(`Health check failed: ${res.status}`);
   return res.json();
 }

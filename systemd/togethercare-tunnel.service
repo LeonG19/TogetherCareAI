@@ -1,0 +1,30 @@
+[Unit]
+Description=TogetherCare cloudflared quick tunnel (public entrypoint -> web tier)
+After=network.target togethercare-web.service
+Wants=togethercare-web.service
+
+[Service]
+Type=simple
+# 8080 is the web tier (web/server.js), which is now the ONLY thing exposed.
+# It serves the built React app and proxies /api to the backend behind an
+# access-code gate, so testers need one URL and the backend's API_KEY never
+# reaches a browser.
+#
+# Deliberately NOT tunnelled:
+#   8010  the FastAPI backend - reaching it directly would bypass the gate
+#   8001  vLLM - stays bound to 127.0.0.1, never exposed
+#   8000  ANOTHER USER'S uvicorn on this shared host. Tunnelling it would
+#         publish THEIR service to the internet.
+ExecStart=/home/lgarza3/bin/cloudflared tunnel --no-autoupdate --url http://localhost:8080
+
+Restart=always
+RestartSec=10
+
+# A quick tunnel gets a NEW random hostname on every restart, so grep the log
+# for the current one after any restart:
+#   grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' /mnt/lagarza3/logs/tunnel.log | tail -1
+StandardOutput=append:/mnt/lagarza3/logs/tunnel.log
+StandardError=append:/mnt/lagarza3/logs/tunnel.log
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,31 @@
+[Unit]
+Description=TogetherCare vLLM (Llama-3.1-8B DPO-merged, loopback only)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/lagarza3/togethercare
+# Supplies HF_TOKEN, which run_vllm.sh accepts as an alias for VLLM_KEY.
+# Mode 600, never committed. "-" so a missing file is not a hard failure.
+EnvironmentFile=-/mnt/lagarza3/togethercare/backend/.env
+Environment=TMPDIR=/mnt/lagarza3/tmp
+Environment=XDG_CACHE_HOME=/mnt/lagarza3/.cache
+Environment=HF_HOME=/mnt/lagarza3/hf_cache
+Environment=CUDA_VISIBLE_DEVICES=0
+ExecStart=/mnt/lagarza3/togethercare/scripts/run_vllm.sh
+
+Restart=always
+RestartSec=15
+# An 8B checkpoint takes ~2 min to load and vLLM does not bind the port until
+# it is done. Without this systemd would consider a slow start a failure.
+TimeoutStartSec=900
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStopSec=60
+
+# vLLM echoes its --api-key in the startup banner, so this log holds a secret.
+StandardOutput=append:/mnt/lagarza3/logs/vllm.log
+StandardError=append:/mnt/lagarza3/logs/vllm.log
+
+[Install]
+WantedBy=default.target

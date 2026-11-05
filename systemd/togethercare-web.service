@@ -1,0 +1,25 @@
+[Unit]
+Description=TogetherCare web tier (serves frontend/dist, proxies /api to the backend, access-code gate)
+After=network.target togethercare-backend.service
+# Wants, not Requires: the gate and the static app must still load while the
+# backend is restarting or still loading weights. A request that needs the
+# backend then returns a 502 the UI can show, which is better than the whole
+# site being unreachable.
+Wants=togethercare-backend.service
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/lagarza3/togethercare/web
+EnvironmentFile=/mnt/lagarza3/togethercare/web/.env
+# Node was installed to /mnt/lagarza3/node from the official tarball - there
+# is no system node on this host and no root access to add one.
+ExecStart=/mnt/lagarza3/node/bin/node /mnt/lagarza3/togethercare/web/server.js
+
+Restart=always
+RestartSec=5
+
+StandardOutput=append:/mnt/lagarza3/logs/web.log
+StandardError=append:/mnt/lagarza3/logs/web.log
+
+[Install]
+WantedBy=default.target
